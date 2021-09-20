@@ -1,0 +1,9 @@
+schemaVersion: '2.0.0'
+
+fileExistenceTests:
+  - name: 'Root'
+    path: '/'
+    shouldExist: true
+  - name: 'Bitrix archive'
+    path: '/bitrix-20.0.180.tgz'
+    shouldExist: true

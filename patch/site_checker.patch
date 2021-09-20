@@ -1,0 +1,63 @@
+--- a/bitrix/modules/main/classes/general/site_checker.php	2019-12-16 17:20:27.391069795 +0300
++++ b/bitrix/modules/main/classes/general/site_checker.php	2019-12-16 17:28:05.812689868 +0300
+@@ -1974,7 +1974,7 @@
+ 
+ 	function check_mysql_mode()
+ 	{
+-		global $DB;
++		/*global $DB;
+ 
+ 		$strError = '';
+ 		$f = $DB->Query('SHOW VARIABLES LIKE \'innodb_strict_mode\'')->Fetch();
+@@ -1985,7 +1985,8 @@
+ 		if (strlen($f['Value']) > 0)
+ 			$strError .= GetMessage('SC_DB_ERR_MODE').' '.$f['Value'];
+ 
+-		return $strError ? $this->Result(false, $strError) : true;
++		return $strError ? $this->Result(false, $strError) : true; */
++		return true;
+ 	}
+ 
+ 	function check_mysql_time()
+
+
+# Hack to fix “Data too long for column 'SITE_ID'” during “Unchecking
+# all 'services' and finishing installation” installation phase.
+--- a/bitrix/wizards/bitrix/demo/modules/main/rating.php
++++ b/bitrix/wizards/bitrix/demo/modules/main/rating.php
+@@ -174,8 +174,8 @@ if (WIZARD_INSTALL_DEMO_DATA)
+ 		CRatings::Calculate($ratingId, true);
+ 		
+ 		COption::SetOptionString("main", "rating_vote_type", 'standart');
+-		COption::SetOptionString("socialnetwork", "tooltip_rating_id", serialize(array($ratingId, $authorityId)), "", WIZARD_SITE_ID); 
+-		COption::SetOptionString("socialnetwork", "tooltip_show_rating", "Y", "", WIZARD_SITE_ID);
++		COption::SetOptionString("socialnetwork", "tooltip_rating_id", serialize(array($ratingId, $authorityId)), "", "00"); 
++		COption::SetOptionString("socialnetwork", "tooltip_show_rating", "Y", "", "00");
+ 		COption::SetOptionString("forum", "SHOW_VOTES", "N");
+ }
+-?>
+\ No newline at end of file
++?>
+
+
+# Fix MySQL version check
+--- a/bitrix/modules/main/install/wizard/utils.php	2020-03-04 17:11:05.434711965 +0300
++++ b/bitrix/modules/main/install/wizard/utils.php	2020-03-04 17:12:23.544220122 +0300
+@@ -417,14 +417,14 @@
+ 				|| (($curver[0]==$minver[0]) && ($curver[1]<$minver[1]))
+ 				|| (($curver[0]==$minver[0]) && ($curver[1]==$minver[1]) && ($curver[2]<$minver[2]))
+ 			))
+-			return false;
++			return true;
+ 		elseif (($maxver[0]>0 || $maxver[1]>0 || $maxver[2]>0)
+ 			&&
+ 			($curver[0]>$maxver[0]
+ 				|| (($curver[0]==$maxver[0]) && ($curver[1]>$maxver[1]))
+ 				|| (($curver[0]==$maxver[0]) && ($curver[1]==$maxver[1]) && ($curver[2]>=$maxver[2]))
+ 			))
+-			return false;
++			return true;
+ 		else
+ 			return true;
+ 	}
+
